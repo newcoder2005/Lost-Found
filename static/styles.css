@@ -116,7 +116,7 @@ form {
 }
 
 #hero-section {
-    background-image: url("/images/hero-section.png");
+    background-image: url("/static/images/hero-section-removebg-preview.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -196,4 +196,8 @@ h1, h2 {
     margin-left: 30vw;
     margin-right:30vw;
     justify-content: center;
+}
+
+a {
+    text-decoration: none;
 }

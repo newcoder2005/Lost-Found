@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PawPals Pet Match Alert</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #FFF5E4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(255,209,209,0.3);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #FFE3E1;
+        }
+        .header img {
+            max-width: 200px;
+            margin-bottom: 15px;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .pet-info {
+            background-color: #FFE3E1;
+            border-left: 4px solid #FF9494;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .pet-info p {
+            margin: 8px 0;
+        }
+        .pet-info strong {
+            display: inline-block;
+            min-width: 120px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #FF9494;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #FFD1D1;
+            color: #333;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #FFE3E1;
+            color: #888;
+            font-size: 14px;
+        }
+        .paw-icon {
+            font-size: 18px;
+            color: #FF9494;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="color: #FF9494;">PawPals</h1>
+            <p style="font-size: 18px; color: #555;">Pet Reunion Service</p>
+        </div>
+        
+        <div class="content">
+            <h2>Great News, {{ username }}!</h2>
+            <p>We think we found a match for your missing pet! Here's what we found:</p>
+            
+            <div class="pet-info">
+                <p><strong>Last Seen Location:</strong> <span>{{ location }}</span></p>
+                <p><strong>Description:</strong> <span>{{ description }}</span></p>
+                <p><strong>Status:</strong> <span>{{ status }}</span></p>
+                <p><strong>Contact:</strong> <span>{{ contact }}</span></p>
+            </div>
+            
+            <p>If this is your pet, click the button below to confirm and connect with the uploader:</p>
+            
+            <a href="{{ link }}" class="button">VIEW PET MATCH NOW</a>
+            
+            <p>If it's not your furry friend, don't worry - PawPals is always on <span class="paw-icon">🐾</span>-trol to help bring them home.</p>
+            
+            <p>Keep an eye on your inbox for more updates!</p>
+        </div>
+        
+        <div class="footer">
+            <p>Hoping for a happy reunion soon!</p>
+        </div>
+    </div>
+</body>
+</html>

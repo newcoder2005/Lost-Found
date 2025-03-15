@@ -43,37 +43,37 @@
                     <p>LOST A PAW? WE'RE ON IT!</p>
                     <p>Find a report lost pet - quick, easy, and free!</p>
                 </div>
-                <form>
+                <form action= "/paw_completed" method="POST" enctype="multipart/form-data">
                     <div class="row g-3">
                         <div class="col">
                             <label for="pets-name">What is your pet's name? *</label>
-                            <input type="text" class="form-control rounded-pill" placeholder="Your pet's name" aria-label="Your pet's name">
+                            <input type="text" class="form-control rounded-pill" name="name" placeholder="Your pet's name" aria-label="Your pet's name" required>
                         </div>
                         <div class="col">
                             <label for="last-seen-location">Where had you last seen your pet? *</label>
-                            <input type="text" class="form-control rounded-pill" placeholder="Last seen location" aria-label="Last seen location">
+                            <input type="text" class="form-control rounded-pill" name="location" placeholder="Last seen location" aria-label="Last seen location" required>
                         </div>
                     </div>
                     <br>
                     <div class="row g-3">
                         <div class="col">
                             <label for="pets-look">How does your pet look like?</label>
-                            <input type="text" class="form-control rounded-pill" placeholder="Your pet looks like" aria-label="Your pet's name">
+                            <input type="text" class="form-control rounded-pill" name="breed" placeholder="Your pet looks like" aria-label="Your pet's name">
                         </div>
                         <div class="col">
                             <label for="email">What's your email? *</label>
-                            <input type="text" class="form-control rounded-pill" placeholder="Your email address" aria-label="Your email address">
+                            <input type="text" class="form-control rounded-pill" name="email" placeholder="Your email address" aria-label="Your email address" required>
                         </div>
                     </div>
                     <br>
                     <div class="form-group">
                       <label for="tell-us-more">Tell us more about your pet:</label>
-                      <input type="text" class="form-control rounded-pill" id="tell-us-more" placeholder="">
+                      <input type="text" class="form-control rounded-pill" name="description" id="tell-us-more" placeholder="">
                     </div>
                     <br>
                     <div class="mb-3">
                         <label for="formFileMultiple" class="form-label">Upload your little friend's pictures here:</label>
-                        <input class="form-control rounded-pill" type="file" id="formFileMultiple" multiple>
+                        <input class="form-control rounded-pill" name="fileCat" type="file" id="formFileMultiple" multiple required>
                     </div>
                     <div class="form-group">
                     </div>

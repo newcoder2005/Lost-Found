@@ -24,7 +24,7 @@ mail = Mail(app)
 load_dotenv(dotenv_path='aws_login.env')
 
 
-HOST = os.getenv('HOST')
+HOST_DB = os.getenv('HOST_DB')
 USERNAME_DB = os.getenv('USERNAME_DB') 
 PASSWORD = os.getenv('PASSWORD')
 DATABASE = os.getenv('DATABASE')
@@ -42,7 +42,7 @@ s3 = boto3.client(
 )
 
 db = mysql.connector.connect(
-        host= HOST,
+        host= HOST_DB,
         user= USERNAME_DB,
         password= PASSWORD,
         database= DATABASE
@@ -361,3 +361,7 @@ def email_similar_from_results(results, min_similarity=0.5):
                 print(f"Warning: Invalid email address: {email_address}, Error: {str(e)}")
             except Exception as e:
                 print(f"Error sending to {email_address}: {str(e)}")
+                continue
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)

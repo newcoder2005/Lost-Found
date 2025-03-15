@@ -28,7 +28,30 @@ s3 = boto3.client(
     region_name=S3_REGION
 )
 
+db = mysql.connector.connect(
+        host= HOST,
+        user= USERNAME_DB,
+        password= PASSWORD,
+        database= DATABASE
+    )
+
+concur = db.cursor()
+
+query = "USE pawpals"
+concur.execute(query)
 #TO-DO LIST: Create function to upload imagef
+
+def upload(file):
+    
+    objname = os.path.basename(file.filename)
+    
+    # Get the file name
+    s3.upload_fileobj(file, S3_BUCKET, objname)
+    
+    # Name file
+    file_path = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{objname}"
+    print(file_path)
+    return file_path
 
 #======== INITIALS =========#
 @app.route("/")
@@ -46,17 +69,22 @@ def form_missing():
     name = request.form.get("name")
     location = request.form.get("location")
     email = request.form.get("email")
+    breed = request.form.get("breed")
+    description = request.form.get("description")
     fileCat = request.files.get("fileCat")
-    # filepath = upload(name, file)
-    # query = "SELECT...."
-    # db.execute(querry)
-    if not name or not email or not location or not fileCat:
+
+    if not name or not email or not location or not breed or not fileCat:
         return render_template("missing-paw.html")
+    
+    filepath = upload(fileCat)
+    
+    query = "INSERT INTO pets(email, name, lost, description, location, breed, image_path) VALUES (%s,%s,%s,%s,%s,%s,%s);"
+    
+    concur.execute(query, (email,name, 1, description,location,breed,filepath))
+    
+    
     return render_template("paw_completed.html", name=name, location=location, email=email)
 
-# def upload(name, file )
-#     s3.upload()
-#     return file_path
 #======== PAW FOUND =========#
 @app.route("/paw_found")
 def paw_found():
@@ -67,23 +95,21 @@ def form_found():
     name = request.form.get("name")
     location = request.form.get("location")
     email = request.form.get("email")
+    breed = request.form.get("breed")
+    description = request.form.get("description")
     fileCat = request.files.get("fileCat")
     
     if not name or not email or not location or not fileCat:
         return render_template("paw_found.html")
-    return render_template("thank_you.html", name=name, location=location, email=email)
     
+    filepath = upload(fileCat)
+    
+    query = "INSERT INTO pets(email, name, lost, description, location, image_path, breed) VALUE ('%s','%s',1,'%s','%s','%s','%s');"
+    
+    concur.execute(query, (email,name,description,location,filepath,breed))
+        
+    return render_template("thank_you.html", name=name, location=location, email=email)
 
-
-
-s3.upload_file("CNN_Model/Imgae_testing/meo_tam_the/cat_1.jpg", S3_BUCKET, "cat_1.jpg")
-image_url = f"https://my-images-bucket.s3.YOUR_REGION.amazonaws.com/cat_1.jpg"
-print("Uploaded Image URL:", image_url)
-db = mysql.connector.connect(
-        host= HOST,
-        user= USERNAME_DB,
-        password= PASSWORD,
-        database= DATABASE
-    )
-
-cursor = db.cursor()
+@app.route("/update")
+def update():
+    return render_template("update.html")

@@ -49,8 +49,12 @@
                 </div>
                 <br>
                 <div class="buttons">
-                  <button type="button" class="btn btn-primary btn-lg">Large button</button>
-                  <button type="button" class="btn btn-secondary btn-lg">Large button</button>
+                  <a href="{{ url_for('missing_paw')}}">
+                  <button type="button" class="pink-button rounded-pill" >missing paw</button>
+                  </a>
+                  <a href="{{ url_for('paw_found')}}">
+                  <button type="button" class="pink-button rounded-pill">paw found</button>
+                  </a>
                 </div>
               </div>
             </div>

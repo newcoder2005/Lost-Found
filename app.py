@@ -117,7 +117,8 @@ def form_found():
     filepath = upload(fileCat)
     
     query = "INSERT INTO pets(email, name, lost, description, location, image_path, breed) VALUE (%s,%s,%s,%s,%s,%s,%s);"
-    
+   
+   
     concur.execute(query, (email,name,0,description,location,filepath,breed))
         
     return render_template("thank_you.html", name=name, location=location, email=email)
@@ -194,3 +195,4 @@ def calculate_similarity(found_img_path):
 #         msg.html = render_template('email/found.html')
 #         mail.send(msg)
     
+concur.close()  # Close cursor

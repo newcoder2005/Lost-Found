@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, render_template, jsonify
 from dotenv import load_dotenv
 import mysql.connector
 import CNN_Model
@@ -6,8 +6,12 @@ import os
 
 app = Flask(__name__)
 
-load_dotenv(dotenv_path='aws_login.env')
+@app.route("/")
+def index():
+    return render_template("index.html")
 
+
+load_dotenv(dotenv_path='aws_login.env')
 
 
 HOST = os.getenv('HOST', 'aws_login')

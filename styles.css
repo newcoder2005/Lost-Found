@@ -8,27 +8,50 @@
     src: url('fonts/KleeOne-Regular.ttf') format('truetype');
 }
 
-.nav {
-    background-color: #FFF5E4;
+.navbar {
+    background-color: #FFF5E4; 
     height: 150px;
 }
 
-/* how to float */
-.tag-line {
-    float: left;
+.navbar li {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+a {
+    color: black;
+}
+
+#logo {
+    max-height: 100px;
+    width: auto;
+}
+
+#tag-line-1 {
+    font-size: 4rem;
 }
 
 #about-us {
     background-image: url("/images/about-us-background.svg");
 }
 
-.missing-paw-page {
-    background-image: url("/images/about-us-background.svg");
-    height: 1800px;
+button {
+    color: #FF9494;
 }
 
+.missing-paw-page {
+    background-image: url("/images/about-us-background.svg");
+    padding-top: 100px;
+}
+
+.missing-paw-content {
+    margin: 120px 25px;
+    padding: 50px;
+}
+
+
 .missing-paw-form {
-    margin: 60px 100px;
+    margin: 100px;
     border: dashed #FF9494;
     background-color: #FFFAF1;
     border-radius: 25px;
@@ -40,13 +63,24 @@ form {
 
 #hero-section {
     background-image: url("/images/hero-section.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-h1 {
-    font-family: "Hey Charlie";
+body {
+    background-color: #FFF5E4;
 }
 
-h2 {
+.body {
+    margin-top: 120px;
+}
+
+.tag-lines {
+    margin-top: 150px;
+}
+
+h1, h2 {
     font-family: "Hey Charlie";
     text-align: center;
 }
@@ -54,12 +88,12 @@ h2 {
 * {
     font-family: "Klee One";
     font-size: x-large;
+    margin: 0px;
 }
 
-.paragraph {
-    margin: 120px;
+.about-us-text {
     text-align: center;
-    font-size: large;
+    padding: 150px 120px;
 }
 
 #hero-section {

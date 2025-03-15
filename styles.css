@@ -1,0 +1,101 @@
+@font-face {
+    font-family: "Hey Charlie";
+    src: url('fonts/HeyCharlie.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: "Klee One";
+    src: url('fonts/KleeOne-Regular.ttf') format('truetype');
+}
+
+.navbar {
+    background-color: #FFF5E4; 
+    height: 150px;
+}
+
+.navbar li {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+a {
+    color: black;
+}
+
+#logo {
+    max-height: 100px;
+    width: auto;
+}
+
+#tag-line-1 {
+    font-size: 4rem;
+}
+
+#about-us {
+    background-image: url("/images/about-us-background.svg");
+}
+
+button {
+    color: #FF9494;
+}
+
+.missing-paw-page {
+    background-image: url("/images/about-us-background.svg");
+    padding-top: 100px;
+}
+
+.missing-paw-content {
+    margin: 120px 25px;
+    padding: 50px;
+}
+
+
+.missing-paw-form {
+    margin: 100px;
+    border: dashed #FF9494;
+    background-color: #FFFAF1;
+    border-radius: 25px;
+}
+
+form {
+    margin: 80px;
+}
+
+#hero-section {
+    background-image: url("/images/hero-section.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+body {
+    background-color: #FFF5E4;
+}
+
+.body {
+    margin-top: 120px;
+}
+
+.tag-lines {
+    margin-top: 150px;
+}
+
+h1, h2 {
+    font-family: "Hey Charlie";
+    text-align: center;
+}
+
+* {
+    font-family: "Klee One";
+    font-size: x-large;
+    margin: 0px;
+}
+
+.about-us-text {
+    text-align: center;
+    padding: 150px 120px;
+}
+
+#hero-section {
+    height: 900px;
+}

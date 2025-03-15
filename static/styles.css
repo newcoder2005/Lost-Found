@@ -100,3 +100,7 @@ h1, h2 {
 #hero-section {
     height: 900px;
 }
+
+.container_1000px {
+    height: 1000px;
+}

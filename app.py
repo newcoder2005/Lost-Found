@@ -75,14 +75,11 @@ def form_missing():
     description = request.form.get("description")
     fileCat = request.files.get("fileCat")
 
-    if not name or not email or not location or not breed or not fileCat:
-        return render_template("missing-paw.html")
-    
     filepath = upload(fileCat)
     
-    query = "INSERT INTO pets(email, name, lost, description, location, breed, image_path) VALUES (%s,%s,%s,%s,%s,%s,%s);"
+    query = "INSERT INTO pets(email, name, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
     
-    concur.execute(query, (email,name, 1, description,location,breed,filepath))
+    concur.execute(query, (email,name, 1, description,location,filepath,breed))
     
     
     return render_template("paw_completed.html", name=name, location=location, email=email)
@@ -94,23 +91,20 @@ def paw_found():
 
 @app.route("/thank_you",methods=["GET", "POST"])
 def form_found():
-    name = request.form.get("name")
+    condition = request.form.get("name")
     location = request.form.get("location")
     email = request.form.get("email")
     breed = request.form.get("breed")
     description = request.form.get("description")
     fileCat = request.files.get("fileCat")
     
-    if not name or not email or not location or not fileCat:
-        return render_template("paw_found.html")
-    
     filepath = upload(fileCat)
     
-    query = "INSERT INTO pets(email, name, lost, description, location, image_path, breed) VALUE (%s,%s,%s,%s,%s,%s,%s);"
+    query = "INSERT INTO pets(email, condition, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
     
-    concur.execute(query, (email,name,0,description,location,filepath,breed))
+    concur.execute(query, (email,condition,0,description,location,filepath,breed))
         
-    return render_template("thank_you.html", name=name, location=location, email=email)
+    return render_template("thank_you.html", name=condition, location=location, email=email)
 
 @app.route("/update")
 def update():

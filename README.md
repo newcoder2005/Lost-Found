@@ -1,4 +1,4 @@
-# ![Pawpals](official logo.svg)
+# Pawpals
 ## Participants
 - Dang Khoa Nguyen
 - Nhat Trang Linh Le

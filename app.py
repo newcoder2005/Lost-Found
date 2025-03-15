@@ -47,6 +47,8 @@ db = mysql.connector.connect(
         database= DATABASE
     )
 
+db.autocommit = True
+
 concur = db.cursor()
 
 query = "USE pawpals"

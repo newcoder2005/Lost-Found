@@ -93,7 +93,7 @@ def form_missing():
     query = "INSERT INTO pets(email, name, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
     
     concur.execute(query, (email,name, 1, description,location,filepath,breed))
-    
+    calculate_similarity(filepath)
     
     return render_template("paw_completed.html", name=name, location=location, email=email)
 
@@ -114,7 +114,6 @@ def form_found():
     filepath = upload(fileCat)
     
     query = "INSERT INTO pets(email, pet_condition, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
-    
     concur.execute(query, (email,pet_condition,0,description,location,filepath,breed))
         
     return render_template("thank_you.html", name=pet_condition, location=location, email=email), calculate_similarity(filepath)
@@ -127,91 +126,185 @@ def update():
 def missing_paw_results():
     email = request.form.get("email")
 
-    # Default to empty list to prevent 'UnboundLocalError'
-    similarities = []
-
-    # Get pet_id from email
+    # Step 1: Fetch the pet_id from email
     concur.execute("SELECT id FROM pets WHERE email = %s", (email,))
-    result = concur.fetchone()  # Fetch pet_id
+    result = concur.fetchone()
 
-    if result:
-        pet_id1 = result[0]  # Extract pet_id
+    if not result:
+        print(f"❌ No pet found for email: {email}")
+        return render_template("missing_paw_results.html", email=email, similarity=[])
 
-        # Find similar pets
-        concur.execute(
-            """
-            SELECT p.id, p.name, p.email, p.image_path, p.location, p.breed, i.similarity_score 
-            FROM pets p 
-            JOIN image_similarities i ON p.id = i.pet_id2 
-            WHERE i.pet_id1 = %s AND i.similarity_score > 0.4 
-            ORDER BY i.similarity_score DESC
-            """, (pet_id1,)
-        )
+    pet_id1 = result[0]  
+    print(f"🔎 Searching for matches for Pet ID: {pet_id1}")
 
-        similarities = concur.fetchall()  # Fetch all results
+    # Ensure all previous results are fetched before executing the next query
+    concur.fetchall()
 
-    # `similarities` will always be defined (even if empty)
-    return render_template("missing-paw-results.html", email=email, similarities=similarities)
-
-
-def calculate_similarity(found_img_path):
-    query= """
-        SELECT p.id, p.image_path
-        FROM pets p
-        WHERE p.lost = 1;
+    # Step 2: Fetch similar pets
+    query = """
+        SELECT 
+            CASE 
+                WHEN i.pet_id1 = %s THEN i.pet_id2
+                ELSE i.pet_id1
+            END AS matched_pet_id,
+            p2.image_path AS image_path,
+            p2.location AS location,
+            p2.breed AS breed,
+            i.similarity_score AS similarity_score
+        FROM image_similarities i
+        JOIN pets p2 ON (i.pet_id1 = p2.id OR i.pet_id2 = p2.id)
+        WHERE (%s IN (i.pet_id1, i.pet_id2)) 
+        AND i.similarity_score > 0.4
+        ORDER BY i.similarity_score DESC;
     """
-    concur.execute(query)
+    
+    concur.execute(query, (pet_id1, pet_id1))
+    results = concur.fetchall()
 
-    pet_images = concur.fetchall()
-    print(pet_images)
+    # ✅ Convert results into a list of dictionaries
+    similarity = []
+    for row in results:
+        similarity.append({
+            "image_path": row[1],  # Image path
+            "location": row[2],  # Location
+            "breed": row[3],  # Breed
+            "similarity_score": row[4]  # Similarity score
+        })
+
+    if not similarity:
+        print(f"❌ No matches found for Pet ID: {pet_id1}")
+    else:
+        print(f"✅ Found {len(similarity)} matches: {similarity}")
+
+    return render_template("missing_paw_results.html", email=email, similarity=similarity)
+
+
+
+
+# def calculate_similarity(found_img_path):
+#     query = """
+#     SELECT p.id, p.image_path
+#     FROM pets p
+#     WHERE p.lost = 1;
+#     """
+#     concur.execute(query)
+#     pet_images = concur.fetchall()
+#     results = []
+
+#     query = "SELECT id FROM pets WHERE image_path = %s"
+#     concur.execute(query, (found_img_path,))
+#     found_image = concur.fetchone()
+#     found_pet_id = found_image[0] if found_image else None
+    
+#     if not found_pet_id:
+#         print("found image not found")
+#         return
+    
+#     for pet_image in pet_images:
+#         pet_id = pet_image[0]
+#         pet_img_path = pet_image[1]
+
+#         if pet_id == found_pet_id:
+#             continue
+
+#         similarity_score = compare_image(found_img_path, pet_img_path)
+
+#         if found_pet_id:
+#             query = """
+#                     INSERT INTO image_similarities (pet_id1, pet_id2, similarity_score)
+#                     VALUES (%s, %s, %s)
+#                     ON DUPLICATE KEY UPDATE similarity_score = VALUES(similarity_score)
+#                 """
+#             concur.execute(query, (pet_id, found_pet_id, similarity_score))
+
+
+#         results.append({
+#             'pet_id': pet_id,
+#             'similarity_score': similarity_score
+#         })
+
+#     results.sort(key=lambda x: x['similarity_score'], reverse=True)
+#     print(results)
+#     return email_similar_from_results(results)
+def calculate_similarity(img_path):
+    """
+    Compare a given pet (lost or found) with all opposite category pets in the database.
+    Ensures lost pets are always stored in pet_id1 and found pets in pet_id2.
+    """
+
+    # Step 1: Get the pet ID and its lost status based on the image path
+    query = "SELECT id, lost FROM pets WHERE image_path = %s"
+    concur.execute(query, (img_path,))
+    pet_info = concur.fetchone()
+
+    if not pet_info:
+        print("❌ Pet with this image path not found in the database.")
+        return None  # ✅ Exit if pet does not exist
+
+    pet_id, is_lost = pet_info  # ✅ Extract pet ID and lost status
+    print(f"🔎 Processing pet {pet_id} (lost = {is_lost})")
+
+    # ✅ FIX: Fetch all remaining results to prevent "Unread result found" error
+    concur.fetchall()
+
+    # Step 2: Determine the opposite category to compare against
+    opposite_lost_status = 1 if is_lost == 0 else 0  # ✅ If lost, compare with found. If found, compare with lost.
+
+    query2 = """
+        SELECT id, image_path
+        FROM pets
+        WHERE lost = %s;
+    """
+    concur.execute(query2, (opposite_lost_status,))
+    opposite_pets = concur.fetchall()  # ✅ Fetch all opposite category pets
+
+    if not opposite_pets:
+        print("❌ No matching pets found to compare against.")
+        return None  # ✅ Exit if there are no matches
+
     results = []
 
-    query = "SELECT id FROM pets WHERE image_path = %s"
-    concur.execute(query, (found_img_path,))
-    found_image = concur.fetchone()
-    found_pet_id = found_image[0] if found_image else None
-    
-    if not found_pet_id:
-        print("found image not found")
-        return
-    
-    for pet_image in pet_images:
-        pet_id = pet_image[0]
-        pet_img_path = pet_image[1]
+    # Step 3: Compare the given pet with all opposite pets
+    for opposite_pet_id, opposite_pet_img_path in opposite_pets:
+        if opposite_pet_id == pet_id:
+            continue  # ✅ Skip self-comparison
 
-        if pet_id == found_pet_id:
-            continue
+        similarity_score = compare_image(img_path, opposite_pet_img_path)
 
-        similarity_score = compare_image(found_img_path, pet_img_path)
+        # ✅ Always store lost pets in pet_id1 and found pets in pet_id2
+        pet_id1, pet_id2 = (pet_id, opposite_pet_id) if is_lost == 1 else (opposite_pet_id, pet_id)
 
-        if found_pet_id:
-            query = """
-                INSERT INTO image_similarities
-                (pet_id1, pet_id2, similarity_score)
-                VALUES (%s, %s, %s)
-                ON DUPLICATE KEY UPDATE similarity_score = %s
-            """
-            concur.execute(query, (pet_id, found_pet_id, similarity_score, similarity_score))
+        query3 = """
+            INSERT INTO image_similarities (pet_id1, pet_id2, similarity_score)
+            VALUES (%s, %s, %s)
+            ON DUPLICATE KEY UPDATE similarity_score = VALUES(similarity_score);
+        """
+        concur.execute(query3, (pet_id1, pet_id2, similarity_score))
 
         results.append({
-            'pet_id': pet_id,
+            'pet_id1': pet_id1,  # ✅ Correct Key
+            'pet_id2': pet_id2,  # ✅ Correct Key
             'similarity_score': similarity_score
         })
 
+    # Step 4: Sort results by similarity score
     results.sort(key=lambda x: x['similarity_score'], reverse=True)
-    print(results)
-    return email_similar_from_results(results)
+    print("✅ Similar pets found:", results)
 
-def email_similar_from_results(results: list) -> None:
-    
-    pet_ids = [result['pet_id'] for result in results]
-    
-    query = "SELECT email FROM pets WHERE id IN ({})".format(','.join(['%s'] * len(pet_ids)))
-    concur.execute(query, tuple(pet_ids))
-    
-    for email_tuple in concur.fetchall():
-        email_address = email_tuple[0]
-        
+    # Step 5: Return only if results exist
+    return email_similar_from_results(results) if results else None
+
+def email_similar_from_results(results):
+    pet_ids = [result['pet_id1'] for result in results]  # ✅ Fixed key name
+
+    if not pet_ids:
+        emails = []  # Avoid executing an invalid SQL query
+    else:
+        query = "SELECT email FROM pets WHERE id IN ({})".format(','.join(['%s'] * len(pet_ids)))
+        concur.execute(query, tuple(pet_ids))
+        emails = [row[0] for row in concur.fetchall()]  # Extract only the emails
+
+    for email_address in emails:
         try:
             valid = validate_email(email_address)
             normalized_email = valid.email

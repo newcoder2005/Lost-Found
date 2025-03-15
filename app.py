@@ -7,6 +7,8 @@ import boto3
 
 app = Flask(__name__)
 
+# TO-DO List: Found image 
+
 load_dotenv(dotenv_path='aws_login.env')
 
 
@@ -104,9 +106,9 @@ def form_found():
     
     filepath = upload(fileCat)
     
-    query = "INSERT INTO pets(email, name, lost, description, location, image_path, breed) VALUE ('%s','%s',1,'%s','%s','%s','%s');"
+    query = "INSERT INTO pets(email, name, lost, description, location, image_path, breed) VALUE (%s,%s,%s,%s,%s,%s,%s);"
     
-    concur.execute(query, (email,name,description,location,filepath,breed))
+    concur.execute(query, (email,name,0,description,location,filepath,breed))
         
     return render_template("thank_you.html", name=name, location=location, email=email)
 

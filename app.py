@@ -10,8 +10,6 @@ from email_validator import validate_email, EmailNotValidError
 app = Flask(__name__)
 
 # TO-DO List: Found image 
-load_dotenv(dotenv_path='email_login.env')
-
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
 app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
 app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS') == 'True'
@@ -21,13 +19,10 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 
 mail = Mail(app)
 
-load_dotenv(dotenv_path='aws_login.env')
-
-
 HOST_DB = os.getenv('HOST_DB')
 USERNAME_DB = os.getenv('USERNAME_DB') 
 PASSWORD = os.getenv('PASSWORD')
-DATABASE = os.getenv('DATABASE')
+DATABASE = ""
 S3_BUCKET = os.getenv('S3_BUCKET')
 S3_REGION = os.getenv('S3_REGION')
 AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')

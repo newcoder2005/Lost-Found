@@ -179,20 +179,19 @@ def calculate_similarity(found_img_path):
     results.sort(key=lambda x: x['similarity_score'], reverse=True)
     return results
 
-# def email_similar_from_results(results: list) -> None:
-#     matches = [match for match in results if match['similarity_score'] > 0.6]
-#     placeholders = ', '.join(['%s'] * len(matches))
-#     query = f"""
-#         SELECT p.email
-#         FROM pet p
-#         WHERE i.pet_id IN ({placeholders})
-#     """
+def email_similar_from_results(results: list) -> None:
+    matches = [match for match in results if match['similarity_score'] > 0.6]
+    placeholders = ', '.join(['%s'] * len(matches))
+    query = f"""
+        SELECT p.email
+        FROM pet p
+        WHERE i.pet_id IN ({placeholders})
+    """
 
-#     concur.execute(query, tuple(matches))
+    concur.execute(query, tuple(matches))
 
-#     for email in concur.fetchall():
-#         msg = Message(subject="PawPals | Could This Be Your Missing Buddy?", recipients=[email])
-#         msg.html = render_template('email/found.html')
-#         mail.send(msg)
+    for email in concur.fetchall():
+        msg = Message(subject="PawPals | Could This Be Your Missing Buddy?", recipients=[email])
+        msg.html = render_template('email/found.html')
+        mail.send(msg)
     
-concur.close()  # Close cursor

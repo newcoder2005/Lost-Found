@@ -15,6 +15,10 @@ def index():
 def missing_paw():
     return render_template("missing-paw.html")
 
+@app.route("/paw_found")
+def paw_found():
+    return render_template("paw_found.html")
+
 
 load_dotenv(dotenv_path='aws_login.env')
 

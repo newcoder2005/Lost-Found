@@ -1,0 +1,67 @@
+@font-face {
+    font-family: "Hey Charlie";
+    src: url('fonts/HeyCharlie.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: "Klee One";
+    src: url('fonts/KleeOne-Regular.ttf') format('truetype');
+}
+
+.nav {
+    background-color: #FFF5E4;
+    height: 150px;
+}
+
+/* how to float */
+.tag-line {
+    float: left;
+}
+
+#about-us {
+    background-image: url("/images/about-us-background.svg");
+}
+
+.missing-paw-page {
+    background-image: url("/images/about-us-background.svg");
+    height: 1800px;
+}
+
+.missing-paw-form {
+    margin: 60px 100px;
+    border: dashed #FF9494;
+    background-color: #FFFAF1;
+    border-radius: 25px;
+}
+
+form {
+    margin: 80px;
+}
+
+#hero-section {
+    background-image: url("/images/hero-section.png");
+}
+
+h1 {
+    font-family: "Hey Charlie";
+}
+
+h2 {
+    font-family: "Hey Charlie";
+    text-align: center;
+}
+
+* {
+    font-family: "Klee One";
+    font-size: x-large;
+}
+
+.paragraph {
+    margin: 120px;
+    text-align: center;
+    font-size: large;
+}
+
+#hero-section {
+    height: 900px;
+}

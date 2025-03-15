@@ -5,6 +5,7 @@ import mysql.connector
 from CNN_model import compare_image
 import os
 import boto3
+from email_validator import validate_email, EmailNotValidError
 
 app = Flask(__name__)
 
@@ -111,13 +112,12 @@ def form_found():
     fileCat = request.files.get("fileCat")
     
     filepath = upload(fileCat)
-    calculate_similarity(filepath)
     
     query = "INSERT INTO pets(email, pet_condition, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
     
     concur.execute(query, (email,pet_condition,0,description,location,filepath,breed))
         
-    return render_template("thank_you.html", name=pet_condition, location=location, email=email)
+    return render_template("thank_you.html", name=pet_condition, location=location, email=email), calculate_similarity(filepath)
 
 @app.route("/update")
 def update():
@@ -171,7 +171,7 @@ def calculate_similarity(found_img_path):
     found_image = concur.fetchone()
     found_pet_id = found_image[0] if found_image else None
     
-    if found_pet_id:
+    if not found_pet_id:
         print("found image not found")
         return
     
@@ -187,11 +187,11 @@ def calculate_similarity(found_img_path):
         if found_pet_id:
             query = """
                 INSERT INTO image_similarities
-                (image_id1, image_id2, similarity_score)
+                (pet_id1, pet_id2, similarity_score)
                 VALUES (%s, %s, %s)
                 ON DUPLICATE KEY UPDATE similarity_score = %s
             """
-            concur.execute(query, (found_pet_id, pet_id, similarity_score, similarity_score))
+            concur.execute(query, (pet_id, found_pet_id, similarity_score, similarity_score))
 
         results.append({
             'pet_id': pet_id,
@@ -200,21 +200,30 @@ def calculate_similarity(found_img_path):
 
     results.sort(key=lambda x: x['similarity_score'], reverse=True)
     print(results)
-    return results
+    return email_similar_from_results(results)
 
 def email_similar_from_results(results: list) -> None:
-    matches = [match for match in results if match['similarity_score'] > 0.6]
-    placeholders = ', '.join(['%s'] * len(matches))
-    query = f"""
-        SELECT p.email
-        FROM pet p
-        WHERE i.pet_id IN ({placeholders})
-    """
-
-    concur.execute(query, tuple(matches))
-
-    for email in concur.fetchall():
-        msg = Message(subject="PawPals | Could This Be Your Missing Buddy?", recipients=[email])
-        msg.html = render_template('email/found.html')
-        mail.send(msg)
     
+    pet_ids = [result['pet_id'] for result in results]
+    
+    query = "SELECT email FROM pets WHERE id IN ({})".format(','.join(['%s'] * len(pet_ids)))
+    concur.execute(query, tuple(pet_ids))
+    
+    for email_tuple in concur.fetchall():
+        email_address = email_tuple[0]
+        
+        try:
+            valid = validate_email(email_address)
+            normalized_email = valid.email
+            
+            msg = Message(subject="PawPals | Could This Be Your Missing Buddy?", 
+                        recipients=[normalized_email])
+            msg.html = render_template('email/found.html')
+            mail.send(msg)
+            
+        except EmailNotValidError as e:
+            print(f"Warning: Invalid email address: {email_address}, Error: {str(e)}")
+            continue
+        except Exception as e:
+            print(f"Error sending to {email_address}: {str(e)}")
+            continue

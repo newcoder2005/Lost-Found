@@ -20,14 +20,6 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 
 mail = Mail(app)
 
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-@app.route("/missing-paw")
-def missing_paw():
-    return render_template("missing-paw.html")
-
 load_dotenv(dotenv_path='aws_login.env')
 
 
@@ -140,52 +132,51 @@ def close_db_connection(exception=None):
         db.close()
         print("MySQL connection is closed")
 
-#@app.route("/calculate-similarity")
-# def calculate_similarity(found_img_path):
-#     query= """
-#         SELECT p.id, p.file_path
-#         FROM pet p
-#         WHERE p.lost = 1 AND p.file_path IS NOT NULL
-#     """
-#     concur.execute(query)
+def calculate_similarity(found_img_path):
+    query= """
+        SELECT p.id, p.file_path
+        FROM pet p
+        WHERE p.lost = 1 AND p.file_path IS NOT NULL
+    """
+    concur.execute(query)
 
-#     pet_images = concur.fetchall()
-#     results = []
+    pet_images = concur.fetchall()
+    results = []
 
-#     query = "SELECT pet_id FROM images WHERE file_path = %s"
-#     concur.execute(query, (found_img_path))
-#     found_image = concur.fetchone()
-#     found_pet_id = found_image[0] if found_image else None
+    query = "SELECT pet_id FROM images WHERE file_path = %s"
+    concur.execute(query, (found_img_path))
+    found_image = concur.fetchone()
+    found_pet_id = found_image[0] if found_image else None
     
-#     if found_pet_id:
-#         print("found image not found")
-#         return
+    if found_pet_id:
+        print("found image not found")
+        return
     
-#     for pet_image in pet_images:
-#         pet_id = pet_image[0]
-#         pet_img_path = pet_image[1]
+    for pet_image in pet_images:
+        pet_id = pet_image[0]
+        pet_img_path = pet_image[1]
 
-#         if pet_id == found_pet_id:
-#             continue
+        if pet_id == found_pet_id:
+            continue
 
-#         similarity_score = CNN_Model.compare_image(found_img_path, pet_img_path)
+        similarity_score = CNN_Model.compare_image(found_img_path, pet_img_path)
 
-#         if found_pet_id:
-#             query = """
-#                 INSERT INTO image_similarities
-#                 (image_id1, image_id2, similarity_score)
-#                 VALUES (%s, %s, %s)
-#                 ON DUPLICATE KEY UPDATE similarity_score = %s
-#             """
-#             concur.execute(query, (found_pet_id, pet_id, similarity_score, similarity_score))
+        if found_pet_id:
+            query = """
+                INSERT INTO image_similarities
+                (image_id1, image_id2, similarity_score)
+                VALUES (%s, %s, %s)
+                ON DUPLICATE KEY UPDATE similarity_score = %s
+            """
+            concur.execute(query, (found_pet_id, pet_id, similarity_score, similarity_score))
 
-#         results.append({
-#             'pet_id': pet_id,
-#             'similarity_score': similarity_score
-#         })
+        results.append({
+            'pet_id': pet_id,
+            'similarity_score': similarity_score
+        })
 
-#     results.sort(key=lambda x: x['similarity_score'], reverse=True)
-#     return results
+    results.sort(key=lambda x: x['similarity_score'], reverse=True)
+    return results
 
 # def email_similar_from_results(results: list) -> None:
 #     matches = [match for match in results if match['similarity_score'] > 0.6]

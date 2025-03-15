@@ -127,11 +127,11 @@ def update():
 def missing_paw_result():
     email = request.form.get("email")
     
-    query = F"""
-    SELECT id FROM pets
-    WHERE email = {email} 
-    """
-    id = db.excute(query)
+    # query = F"""
+    # SELECT id FROM pets
+    # WHERE email = {email} 
+    # """
+    # id = db.excute(query)
     return render_template("missing-paw-results.html", email=email)
 
 def calculate_similarity(found_img_path):
@@ -198,3 +198,5 @@ def email_similar_from_results(results: list) -> None:
         msg.html = render_template('email/found.html')
         mail.send(msg)
     
+if __name__ == "__main__":
+    app.run(host="0.0.0.0",port=5000)

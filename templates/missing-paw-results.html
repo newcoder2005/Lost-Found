@@ -41,35 +41,22 @@
           </div>
           <div class="missing-paw-results-container">
             <div class="missing-paw-results-row">
-              <div class="missing-paw-results-box">
-                <div class="pet-results-image"><img src="../static/images/logo.png" alt="Kurt photo"></div>
-                <div class="pet-results-info">
-                  <div>
-                    <div class="pet-results-detail title" name="name">Name:</div>
-                    <div class="pet-results-detail info" name="namein4">....</div>
+              {% for row in similarity %}
+                <div class="missing-paw-results-box">
+                  <div class="pet-results-image"><img src="{{row['image path'] }}" alt="Kurt photo"></div>
+                  <div class="pet-results-info">
+                    <div>
+                      <div class="pet-results-detail title" name="location">Location:</div>
+                      <div class="pet-results-detail info" name="locationin4">{{row['location']}}</div>
+                    </div>
+                    <div>
+                      <div class="pet-results-detail title" name="breed">Breed:</div>
+                      <div class="pet-results-detail info" name="breedin4">{{row['breed']}}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div class="pet-results-detail title" name="location">Location:</div>
-                    <div class="pet-results-detail info" name="locationin4">...</div>
-                  </div>
-                  <div>
-                    <div class="pet-results-detail title" name="breed">Breed:</div>
-                    <div class="pet-results-detail info" name="breedin4">....</div>
-                  </div>
+                  <div class="more-button"><button type="button" class="more-pink-button rounded-pill">more</button></div>
                 </div>
-                <div class="more-button"><button type="button" class="more-pink-button rounded-pill">more</button></div>
-              </div>
-              <div class="missing-paw-results-box"></div>
-              <div class="missing-paw-results-box"></div>
-              <div class="missing-paw-results-box"></div>
-              <div class="missing-paw-results-box"></div>
-              <div class="missing-paw-results-box"></div>
-              <div class="missing-paw-results-box"></div>
-              <div class="missing-paw-results-box"></div>
-              <div class="missing-paw-results-box"></div>
-              <div class="missing-paw-results-box"></div>
-              <div class="missing-paw-results-box"></div>
-              <div class="missing-paw-results-box"></div>
+              {%endfor%}
             </div>
           </div>
         </div>

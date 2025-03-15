@@ -32,7 +32,7 @@ a {
 }
 
 #about-us {
-    background-image: url("images/about-us-background.svg");
+    background-image: url("/images/about-us-background.svg");
 }
 
 button {
@@ -40,7 +40,7 @@ button {
 }
 
 .missing-paw-page {
-    background-image: url("images/about-us-background.svg");
+    background-image: url("/images/about-us-background.svg");
     padding-top: 100px;
 }
 
@@ -57,12 +57,66 @@ button {
     border-radius: 25px;
 }
 
+.missing-paw-results-box {
+    /* max-width: 300px;
+    min-width: 180px; */
+    flex: 1 1 23%;
+    display: inline-block;
+    /* max-height: 533px;
+    min-height: 320px; */
+    margin: 10px 20px;
+    border: dashed #FF9494;
+    background-color: #FFFAF1;
+    border-radius: 25px;
+    width: 10vw;
+    aspect-ratio: 9/16;
+    position: relative;
+}
+
+.missing-paw-results-row {
+    display: flex;
+    flex-direction: row;
+    font-size: 0.5vw;
+    padding: 5px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.missing-paw-results-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+}
+
+.pet-results-image > img {
+    width: 90%;
+    /* max-width: 250px;
+    min-width: 140px; */
+    margin-left: 5%;
+    margin-left: 5%;
+    margin-top: 5%;
+    border-radius: 25px;
+}
+
+.pet-results-detail {
+    display: inline-block;
+}
+
+.pet-results-detail {
+    font-size: medium;
+    margin: 5%;
+}
+
 form {
     margin: 80px;
 }
 
 #hero-section {
-    background-image: url("images/hero-section.png");
+    background-image: url("/images/hero-section.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -79,7 +133,6 @@ body {
 .tag-lines {
     margin-top: 150px;
 }
-
 
 h1, h2 {
     font-family: "Hey Charlie";
@@ -99,6 +152,40 @@ h1, h2 {
 
 #hero-section {
     height: 900px;
+}
+
+.pink-button {
+    background-color: #FFD1D1;
+    border: #FF9494 dashed;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-size: x-large;
+}
+
+.more-pink-button {
+    background-color: #FFD1D1;
+    color: black;
+    border: #FF9494;
+    padding: 5% 10%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: small;
+    bottom: 5%;
+    margin-left: 30%;
+    margin-right: 30%;
+    width: 40%;
+    cursor: pointer;
+    height: 10%;
+    position: absolute;
+}
+
+.more-pink-button:hover {
+    transform: scale(1.2);
 }
 
 .container_1000px {

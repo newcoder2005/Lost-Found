@@ -104,3 +104,13 @@ h1, h2 {
 .container_1000px {
     height: 1000px;
 }
+
+.update_fill {
+    margin-left: 30vw;
+    margin-right:30vw;
+    justify-content: center;
+}
+
+.submit_btn {
+    justify-content: center;
+}

@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, jsonify, redirect, url_for, s
 from flask_mail import Mail, Message
 from dotenv import load_dotenv
 import mysql.connector
-import CNN_Model
+from CNN_model import compare_image
 import os
 import boto3
 
@@ -109,6 +109,7 @@ def form_found():
     fileCat = request.files.get("fileCat")
     
     filepath = upload(fileCat)
+    calculate_similarity(filepath)
     
     query = "INSERT INTO pets(email, pet_condition, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
     
@@ -119,26 +120,21 @@ def form_found():
 @app.route("/update")
 def update():
     return render_template("update.html")
-@app.teardown_appcontext
-def close_db_connection(exception=None):
-    if db.is_connected():
-        concur.close()
-        db.close()
-        print("MySQL connection is closed")
 
 def calculate_similarity(found_img_path):
     query= """
-        SELECT p.id, p.file_path
-        FROM pet p
-        WHERE p.lost = 1 AND p.file_path IS NOT NULL
+        SELECT p.id, p.image_path
+        FROM pets p
+        WHERE p.lost = 1;
     """
     concur.execute(query)
 
     pet_images = concur.fetchall()
+    print(pet_images)
     results = []
 
-    query = "SELECT pet_id FROM images WHERE file_path = %s"
-    concur.execute(query, (found_img_path))
+    query = "SELECT id FROM pets WHERE image_path = %s"
+    concur.execute(query, (found_img_path,))
     found_image = concur.fetchone()
     found_pet_id = found_image[0] if found_image else None
     
@@ -153,7 +149,7 @@ def calculate_similarity(found_img_path):
         if pet_id == found_pet_id:
             continue
 
-        similarity_score = CNN_Model.compare_image(found_img_path, pet_img_path)
+        similarity_score = compare_image(found_img_path, pet_img_path)
 
         if found_pet_id:
             query = """
@@ -170,6 +166,7 @@ def calculate_similarity(found_img_path):
         })
 
     results.sort(key=lambda x: x['similarity_score'], reverse=True)
+    print(results)
     return results
 
 # def email_similar_from_results(results: list) -> None:

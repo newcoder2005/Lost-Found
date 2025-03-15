@@ -124,15 +124,35 @@ def update():
     return render_template("update.html")
 
 @app.route("/missing_paw_results", methods=["POST"])
-def missing_paw_result():
+def missing_paw_results():
     email = request.form.get("email")
-    
-    query = F"""
-    SELECT id FROM pets
-    WHERE email = {email} 
-    """
-    id = db.excute(query)
-    return render_template("missing-paw-results.html", email=email)
+
+    # Default to empty list to prevent 'UnboundLocalError'
+    similarities = []
+
+    # Get pet_id from email
+    concur.execute("SELECT id FROM pets WHERE email = %s", (email,))
+    result = concur.fetchone()  # Fetch pet_id
+
+    if result:
+        pet_id1 = result[0]  # Extract pet_id
+
+        # Find similar pets
+        concur.execute(
+            """
+            SELECT p.id, p.name, p.email, p.image_path, p.location, p.breed, i.similarity_score 
+            FROM pets p 
+            JOIN image_similarities i ON p.id = i.pet_id2 
+            WHERE i.pet_id1 = %s AND i.similarity_score > 0.4 
+            ORDER BY i.similarity_score DESC
+            """, (pet_id1,)
+        )
+
+        similarities = concur.fetchall()  # Fetch all results
+
+    # `similarities` will always be defined (even if empty)
+    return render_template("missing-paw-results.html", email=email, similarities=similarities)
+
 
 def calculate_similarity(found_img_path):
     query= """

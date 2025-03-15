@@ -11,6 +11,10 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.route("/missing-paw")
+def missing_paw():
+    return render_template("missing-paw.html")
+
 
 load_dotenv(dotenv_path='aws_login.env')
 

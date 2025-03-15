@@ -19,6 +19,9 @@ def missing_paw():
 def paw_found():
     return render_template("paw_found.html")
 
+@app.route("/update")
+def update():
+    return render_template("update.html")
 
 load_dotenv(dotenv_path='aws_login.env')
 

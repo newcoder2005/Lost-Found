@@ -87,9 +87,11 @@
             <p>We think we found a match for your missing pet! Here's what we found:</p>
             
             <div class="pet-info">
+                <div class="pet-image" style="text-align: center; margin: 20px 0;">
+                    <img src="{{ image_url }}" alt="Potential pet match" style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                </div>
                 <p><strong>Last Seen Location:</strong> <span>{{ location }}</span></p>
                 <p><strong>Description:</strong> <span>{{ description }}</span></p>
-                <p><strong>Status:</strong> <span>{{ status }}</span></p>
                 <p><strong>Contact:</strong> <span>{{ contact }}</span></p>
             </div>
             

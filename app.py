@@ -268,8 +268,12 @@ def calculate_similarity(img_path):
     for opposite_pet_id, opposite_pet_img_path in opposite_pets:
         if opposite_pet_id == pet_id:
             continue  # ✅ Skip self-comparison
-
-        similarity_score = compare_image(img_path, opposite_pet_img_path)
+        
+        try:
+            similarity_score = compare_image(img_path, opposite_pet_img_path)
+        except Exception as e:
+            print("error invalid image path(s), continuing to next comparison")
+            continue
 
         # ✅ Always store lost pets in pet_id1 and found pets in pet_id2
         pet_id1, pet_id2 = (pet_id, opposite_pet_id) if is_lost == 1 else (opposite_pet_id, pet_id)
@@ -294,29 +298,66 @@ def calculate_similarity(img_path):
     # Step 5: Return only if results exist
     return email_similar_from_results(results) if results else None
 
-def email_similar_from_results(results):
-    pet_ids = [result['pet_id1'] for result in results]  # ✅ Fixed key name
-
-    if not pet_ids:
-        emails = []  # Avoid executing an invalid SQL query
-    else:
-        query = "SELECT email FROM pets WHERE id IN ({})".format(','.join(['%s'] * len(pet_ids)))
-        concur.execute(query, tuple(pet_ids))
-        emails = [row[0] for row in concur.fetchall()]  # Extract only the emails
-
-    for email_address in emails:
-        try:
-            valid = validate_email(email_address)
-            normalized_email = valid.email
+def email_similar_from_results(results, min_similarity=0.5):
+    # Process each similarity result
+    for result in results:
+        if result['similarity_score'] >= min_similarity:
+            pet_id1, pet_id2 = result['pet_id1'], result['pet_id2']
             
-            msg = Message(subject="PawPals | Could This Be Your Missing Buddy?", 
-                        recipients=[normalized_email])
-            msg.html = render_template('email/found.html')
-            mail.send(msg)
+            # Get details for both pets - now including image_path
+            query = """
+                SELECT id, email, name, description, location, image_path, lost
+                FROM pets 
+                WHERE id IN (%s, %s)
+            """
+            concur.execute(query, (pet_id1, pet_id2))
+            pets_data = {row[0]: {
+                'email': row[1], 
+                'name': row[2], 
+                'description': row[3],
+                'location': row[4],
+                'image_path': row[5],
+                'lost': row[6]
+            } for row in concur.fetchall()}
             
-        except EmailNotValidError as e:
-            print(f"Warning: Invalid email address: {email_address}, Error: {str(e)}")
-            continue
-        except Exception as e:
-            print(f"Error sending to {email_address}: {str(e)}")
-            continue
+            # Determine which pet is lost and which might be the found match
+            if pet_id1 in pets_data and pets_data[pet_id1]['lost'] == 1:
+                lost_pet_id, found_pet_id = pet_id1, pet_id2
+            elif pet_id2 in pets_data and pets_data[pet_id2]['lost'] == 1:
+                lost_pet_id, found_pet_id = pet_id2, pet_id1
+            else:
+                continue  # Skip if neither pet is marked as lost
+            
+            # Get the owner's email
+            email_address = pets_data[lost_pet_id]['email']
+            
+            try:
+                valid = validate_email(email_address)
+                normalized_email = valid.email
+                
+                # Extract username from email (or use pet name if preferred)
+                username = normalized_email.split('@')[0]
+                
+                # Send the email
+                msg = Message(
+                    subject="PawPals | Could This Be Your Missing Buddy?", 
+                    recipients=[normalized_email]
+                )
+                
+                msg.html = render_template(
+                    'email/found.html',
+                    username=username,
+                    location=pets_data[found_pet_id]['location'],
+                    description=pets_data[found_pet_id]['description'],
+                    contact="Contact us to connect with the finder",
+                    link="",  # Left blank as requested
+                    image_url=pets_data[found_pet_id]['image_path']  # Pass the image URL to the template
+                )
+                
+                mail.send(msg)
+                print(f"Sent match notification to {normalized_email} for pet {pets_data[lost_pet_id]['name']}")
+                
+            except EmailNotValidError as e:
+                print(f"Warning: Invalid email address: {email_address}, Error: {str(e)}")
+            except Exception as e:
+                print(f"Error sending to {email_address}: {str(e)}")

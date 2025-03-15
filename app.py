@@ -101,7 +101,7 @@ def paw_found():
 
 @app.route("/thank_you",methods=["GET", "POST"])
 def form_found():
-    condition = request.form.get("name")
+    pet_condition = request.form.get("pet_condition")
     location = request.form.get("location")
     email = request.form.get("email")
     breed = request.form.get("breed")
@@ -110,11 +110,11 @@ def form_found():
     
     filepath = upload(fileCat)
     
-    query = "INSERT INTO pets(email, condition, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
+    query = "INSERT INTO pets(email, pet_condition, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
     
-    concur.execute(query, (email,condition,0,description,location,filepath,breed))
+    concur.execute(query, (email,pet_condition,0,description,location,filepath,breed))
         
-    return render_template("thank_you.html", name=condition, location=location, email=email)
+    return render_template("thank_you.html", name=pet_condition, location=location, email=email)
 
 @app.route("/update")
 def update():

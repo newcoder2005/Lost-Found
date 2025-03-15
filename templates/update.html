@@ -40,14 +40,16 @@
             <br>
             <br>
             <br>
-            <div class="update_fill">
-                <div class="col">
-                    <input type="text" class="form-control rounded-pill" placeholder="Enter your email!" aria-label="Enter your email!">
+            <form action="/missing_paw_results" method="POST" enctype="multipart/form-data">
+                <div class="update_fill">
+                    <div class="col">
+                        <input type="text" class="form-control rounded-pill" name="email" placeholder="Enter your email!" aria-label="Enter your email!">
+                    </div>
+                <br>
+                <br>
+                <button type="submit" class="btn btn-primary rounded-pill" name="update-submit">SUBMIT</button>
                 </div>
-            <br>
-            <br>
-            <button type="submit" class="btn btn-primary rounded-pill" name="update-submit">SUBMIT</button>
-            </div>
+            </form>
             <div class="container_1000px"></div>
         </div>
     </div>

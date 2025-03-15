@@ -123,6 +123,17 @@ def form_found():
 def update():
     return render_template("update.html")
 
+@app.route("/missing_paw_results", methods=["POST"])
+def missing_paw_result():
+    email = request.form.get("email")
+    
+    query = F"""
+    SELECT id FROM pets
+    WHERE email = {email} 
+    """
+    id = db.excute(query)
+    return render_template("missing-paw-results.html", email=email)
+
 def calculate_similarity(found_img_path):
     query= """
         SELECT p.id, p.image_path

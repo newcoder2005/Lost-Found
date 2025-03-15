@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, redirect, url_for, session
 from dotenv import load_dotenv
 import mysql.connector
 import CNN_Model
@@ -6,19 +6,6 @@ import os
 import boto3
 
 app = Flask(__name__)
-
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-@app.route("/missing-paw")
-def missing_paw():
-    return render_template("missing-paw.html")
-
-@app.route("/paw_found")
-def paw_found():
-    return render_template("paw_found.html")
-
 
 load_dotenv(dotenv_path='aws_login.env')
 
@@ -40,6 +27,55 @@ s3 = boto3.client(
     aws_secret_access_key=AWS_SECRET_KEY,
     region_name=S3_REGION
 )
+
+#TO-DO LIST: Create function to upload imagef
+
+#======== INITIALS =========#
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+#======== PAW MISSING =========#
+@app.route("/missing-paw")
+def missing_paw():
+    return render_template("missing-paw.html")
+
+@app.route("/paw_completed",methods=["GET", "POST"])
+def form_missing():
+    name = request.form.get("name")
+    location = request.form.get("location")
+    email = request.form.get("email")
+    fileCat = request.files.get("fileCat")
+    # filepath = upload(name, file)
+    # query = "SELECT...."
+    # db.execute(querry)
+    if not name or not email or not location or not fileCat:
+        return render_template("missing-paw.html")
+    return render_template("paw_completed.html", name=name, location=location, email=email)
+
+# def upload(name, file )
+#     s3.upload()
+#     return file_path
+#======== PAW FOUND =========#
+@app.route("/paw_found")
+def paw_found():
+    return render_template("paw_found.html")
+
+@app.route("/thank_you",methods=["GET", "POST"])
+def form_found():
+    name = request.form.get("name")
+    location = request.form.get("location")
+    email = request.form.get("email")
+    fileCat = request.files.get("fileCat")
+    
+    if not name or not email or not location or not fileCat:
+        return render_template("paw_found.html")
+    return render_template("thank_you.html", name=name, location=location, email=email)
+    
+
+
+
 s3.upload_file("CNN_Model/Imgae_testing/meo_tam_the/cat_1.jpg", S3_BUCKET, "cat_1.jpg")
 image_url = f"https://my-images-bucket.s3.YOUR_REGION.amazonaws.com/cat_1.jpg"
 print("Uploaded Image URL:", image_url)

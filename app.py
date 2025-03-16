@@ -270,7 +270,7 @@ def calculate_similarity(img_path):
             continue  # ✅ Skip self-comparison
         
         try:
-            similarity_score = compare_image(img_path, opposite_pet_img_path)
+            similarity_score = float(compare_image(img_path, opposite_pet_img_path))
         except Exception as e:
             print("error invalid image path(s), continuing to next comparison")
             continue

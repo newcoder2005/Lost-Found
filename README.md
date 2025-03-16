@@ -18,7 +18,7 @@
 - CNN Models (Tensorflow)
 - Jinja
 
-## [About our product]()
+## About our product - [Try Now](pawpals.up.railway.app)
 
 Inspiration
 Being part of a community of devoted animal lovers, we deeply understand the heartbreak of losing a beloved pet. We’ve witnessed firsthand the pain, anxiety, and helplessness that come with searching for a missing furry friend. While miracles don’t always happen, we believe in creating solutions that can bring pet owners and their lost companions one step closer to reunion. This passion is what drives us to develop PawPals.
@@ -27,6 +27,21 @@ We recognised that pet owners have multiple ways to search for their lost pets o
 
 With this website, we hope to give more pets a fighting chance to be rescued and reunited with their families. Our goal is not just to provide a tool but to create moments of joy, relief, and hope. We want to make miracles happen - one paw at a time.
 
+## How to use Pawpals website
+### Finding a paw
+1. Click on the *missing paw*, this link will direct you to the form.
+2. Fill in the information about the paw includes the *image of the paw*, and submit it.
+3. Wait for seconds, some watches will show you. Otherwise, it display a message to announce you wait.
+   
+### Found a paw
+1. Click on the *paw found*, this link will direct you to the form.
+2. Fill in the information about the paw includes the *clear image*, and submit it.
+3. After submiting, a thankful message will be displayed.
+
+### Checking Updates
+1. Click on the *Updates*, and fill your email.
+2. Some updates will show you.
+   
 ## Challenges
 we’re facing several challenges in developing PawPals. One of our main concerns is ensuring that our users receive timely email notifications at every stage of the reporting and searching process. However, setting up and integrating the email system into our website has been difficult for us.
 
@@ -97,19 +112,5 @@ The application’s backend was powered by Python using Flask. Flask provided th
 ### *Frontend* 
 HTML,CSS were chosen for frontend development. We have used Boostrap framework which provides a robust and efficient framework for building interactive user interfaces. In additional, our frontend also created the new style to make user interface look fanstastic. The frontend displays the paw images, with having high similarities rate, to the client so they can have more opportunities to identify their paw. 
 
-## How to use Pawpals website
-### Finding a paw
-1. Click to the *missing paw*, this link will direct you to the form.
-2. Fill in the information about the paw includes the *image of the paw*, and submit it.
-3. Wait for seconds, some watches will show you. Otherwise, it display a message to announce you wait.
-   
-### Found a paw
-1. Click to the *paw found*, this link will direct you to the form.
-2. Fill in the information about the paw includes the *clear image*, and submit it.
-3. After submiting, a thankful message will be displayed.
-
-### Checking Updates
-1. Click to the *Updates*, and fill your email.
-2. Some updates will show you.
  
 

@@ -229,6 +229,10 @@ def missing_paw_results():
 
     return render_template("missing_paw_results.html", email=email, similarity=similarity)
 
+@app.route("/more", methods=["GET","POST"])
+def more():
+    return render_template("more.html")
+
 def calculate_similarity(img_path):
     """
     Compare a given pet (lost or found) with all opposite category pets in the database.

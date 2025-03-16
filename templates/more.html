@@ -35,32 +35,35 @@
       </nav>
         <div class="missing-paw-content">
           <div class="title text-center">
-              <h1>MISSING PAW</h1>
+              <h1>MORE INFORMATION</h1>
               <p>Thank you so much for trusting PawPals<br>We will give our best to find your friend as quick as possible!</p>
               <p>Here are some of our results so far!</p>
           </div>
-          <form action="\more" method="POST">
-            <div class="missing-paw-results-container">
-              <div class="missing-paw-results-row">
-                {% for row in similarity %}
-                  <div class="missing-paw-results-box">
-                    <div class="pet-results-image"><img src="{{ row.image_path }}" alt="Kurt photo"></div>
-                    <div class="pet-results-info">
-                      <div>
-                        <div class="pet-results-detail title" name="location">Location:</div>
-                        <div class="pet-results-detail info" name="locationin4">{{row['location']}}</div>
-                      </div>
-                      <div>
-                        <div class="pet-results-detail title" name="breed">Breed:</div>
-                        <div class="pet-results-detail info" name="breedin4">{{row['breed']}}</div>
-                      </div>
+          <div class="missing-paw-results-container">
+            <div class="missing-paw-results-row">
+              {% for row in similarity %}
+                <div class="missing-paw-results-box">
+                  <div class="pet-results-image"><img src="{{ row.image_path }}" alt="Kurt photo"></div>
+                  <div class="pet-results-info">
+                    <div>
+                      <div class="pet-results-detail title" name="location">Location:</div>
+                      <div class="pet-results-detail info" name="locationin4">{{row['location']}}</div>
                     </div>
-                    <div class="more-button"><button type="submit" class="more-pink-button rounded-pill">more</button></div>
+                    <div>
+                      <div class="pet-results-detail title" name="breed">Breed:</div>
+                      <div class="pet-results-detail info" name="breedin4">{{row['breed']}}</div>
+                    </div>
+                    <div>
+                        <div class="pet-results-detail title" name="description">Description:</div>
+                        <div class="pet-results-detail info" name="descriptionin4">{{row['description']}}</div>
+                      </div>
                   </div>
-                {%endfor%}
-              </div>
+                  <div class="more-button"><button type="button" class="more-pink-button rounded-pill">Yes</button></div>
+                  <div class="more-button"><button type="button" class="more-pink-button rounded-pill">No</button></div>
+                </div>
+              {%endfor%}
             </div>
-          </form>
+          </div>
         </div>
 
     </div>

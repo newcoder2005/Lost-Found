@@ -50,8 +50,8 @@ button {
     color: #FF9494;
 }
 
-.missing-paw-page {
-    background-image: url("/images/about-us-background.svg");
+.paw-background-page {
+    background-image: url("/static/images/about-us-background.svg");
     padding-top: 100px;
 }
 

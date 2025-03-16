@@ -178,8 +178,9 @@ def missing_paw_results():
 
     return render_template("missing_paw_results.html", email=email, similarity=similarity)
 
-
-
+@app.route("/more",methods=["GET","POST"])
+def more():
+    return render_template("more.html")
 
 # def calculate_similarity(found_img_path):
 #     query = """
@@ -323,3 +324,4 @@ def email_similar_from_results(results):
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
+

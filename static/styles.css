@@ -32,7 +32,7 @@ a {
 }
 
 #about-us {
-    background-image: url("/images/about-us-background.svg");
+    background-image: url("/static/images/about-us-background.svg");
 }
 
 button {
@@ -40,7 +40,7 @@ button {
 }
 
 .missing-paw-page {
-    background-image: url("/images/about-us-background.svg");
+    background-image: url("/static/images/about-us-background.svg");
     padding-top: 100px;
 }
 

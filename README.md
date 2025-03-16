@@ -25,7 +25,7 @@ We recognised that pet owners have multiple ways to search for their lost pets o
 
 With this website, we hope to give more pets a fighting chance to be rescued and reunited with their families. Our goal is not just to provide a tool but to create moments of joy, relief, and hope. We want to make miracles happen - one paw at a time.
 
-Challenge we ran into
+## Challenge we ran into
 we’re facing several challenges in developing PawPals. One of our main concerns is ensuring that our users receive timely email notifications at every stage of the reporting and searching process. However, setting up and integrating the email system into our website has been difficult for us.
 Additionally, we are struggling with deploying our database using AWS, as we lack experience in cloud-based infrastructure. Managing and maintaining a secure and efficient database is essential for our platform, but setting up and configuring AWS services has proven to be a challenge.
 Another major hurdle is integrating advanced technologies like TensorFlow into our web application. Since our platform relies on AI-powered image matching, properly implementing TensorFlow and its machine learning models is crucial. However, integrating these components seamlessly into the website has been complex due to our limited technical expertise.
@@ -36,7 +36,7 @@ The biggest achievement for us is stepping out of our safe zone and tackling som
 Beyond that, we’re incredibly proud that PawPals actually works! While it may not be 100% complete, knowing that we built something genuinely useful for pet lovers and those desperately searching for their lost companions is incredibly fulfilling. The journey wasn’t easy, but we embraced the learning process, not just within our own areas of expertise, but from each other as well, specially when the coders started to bombard the business kids’ ears with all these front-end and back-end stuff =))
 Initially, we expected UniHack to be a draining experience, a nonstop focus competition. However, reality turned out to be much more than that. Of course, there were hours of intense concentration and heated debates over ideas, but in between, we found moments of laughter, deep conversations, and sharing KFC as the clock ticked down. Looking back, we’re proud that we didn’t just power through a high-pressure competition, we made memories, took control of every step, and turned this journey into something truly unforgettable in our youth.
 
-What we learnt
+## What we learnt
 
 Turning Passion into Reality: Many of us have always dreamed of creating something meaningful for society, using the skills and knowledge we’ve gained. Our journey began by identifying a real-world problem - a challenge that resonated with our personal experiences, our ‘pain point’. And unlike any other traditional university projects, UniHack pushed us to connect multiple disciplines, from IT and design to business strategy, making it feel like we were running a small startup rather than just completing an assignment for higher grade.
 
@@ -50,7 +50,7 @@ Embracing Differences & Teamwork: Coming from diverse backgrounds, majors, and p
 
 What we didn’t anticipate was how much we would enjoy the process, collaborating, brainstorming, and sharing personal stories. Through this journey, we discovered that teamwork isn’t just about working together, but it’s all about communicating, understanding, and appreciating our differences.
 
-What’s next for PawPals
+## What’s next for PawPals
 
 We're always looking for ways to improve PawPals and make it even more effective in reuniting lost pets with their families. Our next steps include introducing a dashboard that displays the latest found pets and those in urgent need of help. We also plan to keep the website updated with real-time success stories, reassuring users that PawPals is a trusted and effective platform.
 To spread hope and inspire more people to take action, we aim to feature videos and interviews with pet owners and rescuers who have experienced the joy of reuniting lost pets. These heartwarming stories will help build a stronger, more connected pet-loving community.

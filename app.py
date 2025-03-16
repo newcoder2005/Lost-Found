@@ -2,10 +2,12 @@ from flask import Flask, request, render_template, jsonify, redirect, url_for, s
 from flask_mail import Mail, Message
 from dotenv import load_dotenv
 import mysql.connector
+from mysql.connector import pooling
 from CNN_model import compare_image
 import os
 import boto3
 from email_validator import validate_email, EmailNotValidError
+import time
 
 app = Flask(__name__)
 
@@ -22,12 +24,87 @@ mail = Mail(app)
 HOST_DB = os.getenv('HOST_DB')
 USERNAME_DB = os.getenv('USERNAME_DB') 
 PASSWORD = os.getenv('PASSWORD')
-DATABASE = ""
+DATABASE = "pawpals"
 S3_BUCKET = os.getenv('S3_BUCKET')
 S3_REGION = os.getenv('S3_REGION')
 AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
 AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
 
+# Database connection pool
+db_pool = None
+
+def create_db_pool():
+    global db_pool
+    try:
+        db_pool = mysql.connector.pooling.MySQLConnectionPool(
+            pool_name="pawpals_pool",
+            pool_size=5,
+            host=HOST_DB,
+            user=USERNAME_DB,
+            password=PASSWORD,
+            database=DATABASE,
+            connect_timeout=60,
+            use_pure=True,
+            autocommit=True
+        )
+        print("Database connection pool created successfully")
+        return True
+    except mysql.connector.Error as err:
+        print(f"Error creating connection pool: {err}")
+        return False
+
+# Create pool on startup
+create_db_pool()
+
+def get_db_connection():
+    global db_pool
+    max_retries = 3
+    retry_delay = 2
+    
+    for attempt in range(max_retries):
+        try:
+            if db_pool is None:
+                create_db_pool()
+                
+            connection = db_pool.get_connection()
+            return connection
+        except mysql.connector.Error as err:
+            print(f"Database connection failed (attempt {attempt+1}/{max_retries}): {err}")
+            
+            if attempt < max_retries - 1:
+                print(f"Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+                retry_delay *= 2  # Exponential backoff
+            
+    raise Exception("Failed to connect to database after multiple attempts")
+
+def execute_query(query, params=None, fetch=None):
+    connection = None
+    cursor = None
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute(query, params or ())
+        
+        if fetch == 'one':
+            result = cursor.fetchone()
+            # Consume any remaining results to avoid "Unread result found"
+            cursor.fetchall()
+            return result
+        elif fetch == 'all':
+            return cursor.fetchall()
+        else:
+            # For non-SELECT queries, we still need to consume any possible results
+            cursor.fetchall()
+        return None
+    except mysql.connector.Error as err:
+        print(f"Database query error: {err}")
+        raise
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
 s3 = boto3.client(
     's3',
@@ -36,23 +113,7 @@ s3 = boto3.client(
     region_name=S3_REGION
 )
 
-db = mysql.connector.connect(
-        host= HOST_DB,
-        user= USERNAME_DB,
-        password= PASSWORD,
-        database= DATABASE
-    )
-
-db.autocommit = True
-
-concur = db.cursor()
-
-query = "USE pawpals"
-concur.execute(query)
-#TO-DO LIST: Create function to upload imagef
-
 def upload(file):
-    
     objname = os.path.basename(file.filename)
     
     # Get the file name
@@ -87,7 +148,7 @@ def form_missing():
     
     query = "INSERT INTO pets(email, name, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
     
-    concur.execute(query, (email,name, 1, description,location,filepath,breed))
+    execute_query(query, (email, name, 1, description, location, filepath, breed))
     calculate_similarity(filepath)
     
     return render_template("paw_completed.html", name=name, location=location, email=email)
@@ -109,7 +170,7 @@ def form_found():
     filepath = upload(fileCat)
     
     query = "INSERT INTO pets(email, pet_condition, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
-    concur.execute(query, (email,pet_condition,0,description,location,filepath,breed))
+    execute_query(query, (email, pet_condition, 0, description, location, filepath, breed))
         
     return render_template("thank_you.html", name=pet_condition, location=location, email=email), calculate_similarity(filepath)
 
@@ -122,8 +183,7 @@ def missing_paw_results():
     email = request.form.get("email")
 
     # Step 1: Fetch the pet_id from email
-    concur.execute("SELECT id FROM pets WHERE email = %s", (email,))
-    result = concur.fetchone()
+    result = execute_query("SELECT id FROM pets WHERE email = %s", (email,), fetch='one')
 
     if not result:
         print(f"❌ No pet found for email: {email}")
@@ -131,9 +191,6 @@ def missing_paw_results():
 
     pet_id1 = result[0]  
     print(f"🔎 Searching for matches for Pet ID: {pet_id1}")
-
-    # Ensure all previous results are fetched before executing the next query
-    concur.fetchall()
 
     # Step 2: Fetch similar pets
     query = """
@@ -153,8 +210,7 @@ def missing_paw_results():
         ORDER BY i.similarity_score DESC;
     """
     
-    concur.execute(query, (pet_id1, pet_id1))
-    results = concur.fetchall()
+    results = execute_query(query, (pet_id1, pet_id1), fetch='all')
 
     # ✅ Convert results into a list of dictionaries
     similarity = []
@@ -173,54 +229,6 @@ def missing_paw_results():
 
     return render_template("missing_paw_results.html", email=email, similarity=similarity)
 
-
-
-
-# def calculate_similarity(found_img_path):
-#     query = """
-#     SELECT p.id, p.image_path
-#     FROM pets p
-#     WHERE p.lost = 1;
-#     """
-#     concur.execute(query)
-#     pet_images = concur.fetchall()
-#     results = []
-
-#     query = "SELECT id FROM pets WHERE image_path = %s"
-#     concur.execute(query, (found_img_path,))
-#     found_image = concur.fetchone()
-#     found_pet_id = found_image[0] if found_image else None
-    
-#     if not found_pet_id:
-#         print("found image not found")
-#         return
-    
-#     for pet_image in pet_images:
-#         pet_id = pet_image[0]
-#         pet_img_path = pet_image[1]
-
-#         if pet_id == found_pet_id:
-#             continue
-
-#         similarity_score = compare_image(found_img_path, pet_img_path)
-
-#         if found_pet_id:
-#             query = """
-#                     INSERT INTO image_similarities (pet_id1, pet_id2, similarity_score)
-#                     VALUES (%s, %s, %s)
-#                     ON DUPLICATE KEY UPDATE similarity_score = VALUES(similarity_score)
-#                 """
-#             concur.execute(query, (pet_id, found_pet_id, similarity_score))
-
-
-#         results.append({
-#             'pet_id': pet_id,
-#             'similarity_score': similarity_score
-#         })
-
-#     results.sort(key=lambda x: x['similarity_score'], reverse=True)
-#     print(results)
-#     return email_similar_from_results(results)
 def calculate_similarity(img_path):
     """
     Compare a given pet (lost or found) with all opposite category pets in the database.
@@ -228,9 +236,7 @@ def calculate_similarity(img_path):
     """
 
     # Step 1: Get the pet ID and its lost status based on the image path
-    query = "SELECT id, lost FROM pets WHERE image_path = %s"
-    concur.execute(query, (img_path,))
-    pet_info = concur.fetchone()
+    pet_info = execute_query("SELECT id, lost FROM pets WHERE image_path = %s", (img_path,), fetch='one')
 
     if not pet_info:
         print("❌ Pet with this image path not found in the database.")
@@ -239,19 +245,14 @@ def calculate_similarity(img_path):
     pet_id, is_lost = pet_info  # ✅ Extract pet ID and lost status
     print(f"🔎 Processing pet {pet_id} (lost = {is_lost})")
 
-    # ✅ FIX: Fetch all remaining results to prevent "Unread result found" error
-    concur.fetchall()
-
     # Step 2: Determine the opposite category to compare against
     opposite_lost_status = 1 if is_lost == 0 else 0  # ✅ If lost, compare with found. If found, compare with lost.
 
-    query2 = """
-        SELECT id, image_path
-        FROM pets
-        WHERE lost = %s;
-    """
-    concur.execute(query2, (opposite_lost_status,))
-    opposite_pets = concur.fetchall()  # ✅ Fetch all opposite category pets
+    opposite_pets = execute_query(
+        "SELECT id, image_path FROM pets WHERE lost = %s",
+        (opposite_lost_status,),
+        fetch='all'
+    )
 
     if not opposite_pets:
         print("❌ No matching pets found to compare against.")
@@ -273,12 +274,14 @@ def calculate_similarity(img_path):
         # ✅ Always store lost pets in pet_id1 and found pets in pet_id2
         pet_id1, pet_id2 = (pet_id, opposite_pet_id) if is_lost == 1 else (opposite_pet_id, pet_id)
 
-        query3 = """
+        execute_query(
+            """
             INSERT INTO image_similarities (pet_id1, pet_id2, similarity_score)
             VALUES (%s, %s, %s)
             ON DUPLICATE KEY UPDATE similarity_score = VALUES(similarity_score);
-        """
-        concur.execute(query3, (pet_id1, pet_id2, similarity_score))
+            """,
+            (pet_id1, pet_id2, similarity_score)
+        )
 
         results.append({
             'pet_id1': pet_id1,  # ✅ Correct Key
@@ -300,20 +303,26 @@ def email_similar_from_results(results, min_similarity=0.5):
             pet_id1, pet_id2 = result['pet_id1'], result['pet_id2']
             
             # Get details for both pets - now including image_path
-            query = """
+            pets_data = {}
+            found_pets = execute_query(
+                """
                 SELECT id, email, name, description, location, image_path, lost
                 FROM pets 
                 WHERE id IN (%s, %s)
-            """
-            concur.execute(query, (pet_id1, pet_id2))
-            pets_data = {row[0]: {
-                'email': row[1], 
-                'name': row[2], 
-                'description': row[3],
-                'location': row[4],
-                'image_path': row[5],
-                'lost': row[6]
-            } for row in concur.fetchall()}
+                """,
+                (pet_id1, pet_id2),
+                fetch='all'
+            )
+            
+            for row in found_pets:
+                pets_data[row[0]] = {
+                    'email': row[1], 
+                    'name': row[2], 
+                    'description': row[3],
+                    'location': row[4],
+                    'image_path': row[5],
+                    'lost': row[6]
+                }
             
             # Determine which pet is lost and which might be the found match
             if pet_id1 in pets_data and pets_data[pet_id1]['lost'] == 1:

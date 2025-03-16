@@ -25,7 +25,7 @@ We recognised that pet owners have multiple ways to search for their lost pets o
 
 With this website, we hope to give more pets a fighting chance to be rescued and reunited with their families. Our goal is not just to provide a tool but to create moments of joy, relief, and hope. We want to make miracles happen - one paw at a time.
 
-## Challenge we ran into
+## Challenges
 we’re facing several challenges in developing PawPals. One of our main concerns is ensuring that our users receive timely email notifications at every stage of the reporting and searching process. However, setting up and integrating the email system into our website has been difficult for us.
 Additionally, we are struggling with deploying our database using AWS, as we lack experience in cloud-based infrastructure. Managing and maintaining a secure and efficient database is essential for our platform, but setting up and configuring AWS services has proven to be a challenge.
 Another major hurdle is integrating advanced technologies like TensorFlow into our web application. Since our platform relies on AI-powered image matching, properly implementing TensorFlow and its machine learning models is crucial. However, integrating these components seamlessly into the website has been complex due to our limited technical expertise.
@@ -60,24 +60,26 @@ At the heart of PawPals, we believe that every paw deserves a way home. As we co
 ## How we built it
 Our project contains frontend, and backend components. The breakdown for each component is as follows:
 
-Backend CNN Model - We employed a Convolutional Neural Network (CNN) for object detection, enabling accurate identification and similarity calculations between lost and found paws. 
+*Backend*
+CNN Model - We employed a Convolutional Neural Network (CNN) for object detection, enabling accurate identification and similarity calculations between lost and found paws. 
 Flask - Flask served as the backbone of our backend infrastructure, facilitating HTTP request handling, routing, and communication with the frontend. 
 AWS S3 - AWS S3 was utilised for database management and secure cloud storage of images.
 The Request library was utilised for making HTTP requests to external APIs, enabling communication with third-party services and data retrieval. 
 Flask mail -  We implement Flask Mail for automated notifications and updates, ensuring timely alerts for users. 
 Jinja language -The Jinja templating engine helps us dynamically display database-driven content on the website.
 
-Frontend HTML,CSS were chosen for frontend development. We have used Boostrap framework which provides a robust and efficient framework for building interactive user interfaces. In additional, our frontend also created the new style to make user interface look fanstastic. The frontend displays the paw images, with having high similarities rate, to the client so they can have more opportunities to identify their paw. 
+*Frontend* 
+HTML,CSS were chosen for frontend development. We have used Boostrap framework which provides a robust and efficient framework for building interactive user interfaces. In additional, our frontend also created the new style to make user interface look fanstastic. The frontend displays the paw images, with having high similarities rate, to the client so they can have more opportunities to identify their paw. 
 
 ## How to use Pawpals website
 ### Finding a paw
 1. Click to the missing paw, this link will direct you to the form.
-2. Fill in the information about the paw, and submit it.
+2. Fill in the information about the paw includes the image of the paw, and submit it.
 3. Wait for seconds, some watches will show you. Otherwise, it display a message to announce you wait.
    
 ### Found a paw
 1. Click to the paw found, this link will direct you to the form.
-2. Fill in the information about the paw, and submit it.
+2. Fill in the information about the paw includes the clear image, and submit it.
 3. After submiting, a thankful message will be displayed.
 
 ### Checking Updates

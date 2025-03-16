@@ -50,10 +50,10 @@
                 <br>
                 <div class="buttons">
                   <a href="{{ url_for('missing_paw')}}">
-                  <button type="button" class="pink-button rounded-pill" >missing paw</button>
+                  <button type="button" class="hero-section-pink-button rounded-pill" >missing paw</button>
                   </a>
                   <a href="{{ url_for('paw_found')}}">
-                  <button type="button" class="pink-button rounded-pill">paw found</button>
+                  <button type="button" class="hero-section-pink-button rounded-pill">paw found</button>
                   </a>
                 </div>
               </div>
@@ -63,7 +63,11 @@
       </div>
       <div id="about-us">
           <div class="about-us-text">
-              <h2>ABOUT US</h2>
+              <div class="title text-center">
+                <img src="{{ url_for('static', filename='images/pink-paw.svg') }}" alt="pink paw">
+                <h2>ABOUT US</h2>
+                <img src="{{ url_for('static', filename='images/pink-paw.svg') }}" alt="pink paw">
+              </div>
               <img src="{{ url_for('static', filename='images/pink-paw.svg') }}" alt="pink paw">
               <br>
               <br>

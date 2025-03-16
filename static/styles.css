@@ -13,6 +13,17 @@
     height: 150px;
 }
 
+.title {
+    display: flex;
+    justify-content: center;
+}
+
+.title img {
+    height: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
 .navbar li {
     margin-left: 50px;
     margin-right: 50px;
@@ -32,29 +43,34 @@ a {
 }
 
 #about-us {
-    background-image: url("/images/about-us-background.svg");
+    background-image: url("/static/images/about-us-background.svg");
 }
 
 button {
     color: #FF9494;
 }
 
-.missing-paw-page {
-    background-image: url("/images/about-us-background.svg");
+.paw-background-page {
+    background-image: url("/static/images/about-us-background.svg");
     padding-top: 100px;
 }
 
-.missing-paw-content {
-    margin: 120px 25px;
+.content {
+    margin: 20px 25px 0px 25px;
     padding: 50px;
 }
 
 
-.missing-paw-form {
-    margin: 100px;
+.box {
+    margin: 50px 100px 55px 100px;
     border: dashed #FF9494;
     background-color: #FFFAF1;
     border-radius: 25px;
+    stroke-width: 10px;
+}
+
+.box-content {
+    margin: 20px;
 }
 
 .missing-paw-results-box {
@@ -162,9 +178,23 @@ h1, h2 {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
     font-size: x-large;
+    font-family: "Hey Charlie";
+    margin-left: 40%;
+    margin-right: 40%;
+    /* width: 250px; */
 }
+
+.hero-section-pink-button {
+    background-color: #FFD1D1;
+    border: #FF9494 dashed;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: x-large;
+    font-family: "Klee One";}
 
 .more-pink-button {
     background-color: #FFD1D1;
@@ -197,7 +227,34 @@ h1, h2 {
     margin-right:30vw;
     justify-content: center;
 }
-
 a {
     text-decoration: none;
+}
+
+.friend-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    min-height: 500px;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    gap: 20px; /* Space between text and image */
+    position: relative;
+}
+
+.friend-image img {
+    border-radius: 8px;
+    width: 300px; /* Adjusted size */
+    height: auto;
+    margin: 0;
+    position: static; /* Remove absolute positioning */
+}
+
+.friend-detail {
+    display: flex;
+    flex-direction: column;
+    position: static; /* Allow normal flex positioning */
+    gap: 10px;
 }

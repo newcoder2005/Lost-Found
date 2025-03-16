@@ -3,7 +3,7 @@ from flask_mail import Mail, Message
 from dotenv import load_dotenv
 import mysql.connector
 from mysql.connector import pooling
-from CNN_model import compare_image
+from light_model import compare_image
 import os
 import boto3
 from email_validator import validate_email, EmailNotValidError

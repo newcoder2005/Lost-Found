@@ -71,21 +71,21 @@ At the heart of PawPals, we believe that every paw deserves a way home. As we co
 Our project contains frontend, and backend components. The breakdown for each component is as follows:
 
 ### *Backend*
-Figma - This allowed our team to visualize the project before diving into the development process.
+*Figma* - This allowed our team to visualize the project before diving into the development process.
 
-Google Docs - Using Google Docs to document project requirements, technical specs, and brainstorming ideas. It served as a collaborative tool for keeping track of project progress and sharing updates with the team.
+*Google Docs* - Using Google Docs to document project requirements, technical specs, and brainstorming ideas. It served as a collaborative tool for keeping track of project progress and sharing updates with the team.
 
-HTML, CSS - The frontend was built using HTML for structuring the content and CSS for styling. focused on creating a responsive layout that adapts seamlessly to different screen sizes, ensuring accessibility and a user-friendly interface.
+*HTML, CSS* - The frontend was built using HTML for structuring the content and CSS for styling. focused on creating a responsive layout that adapts seamlessly to different screen sizes, ensuring accessibility and a user-friendly interface.
 
-CNN Model - We employed a Convolutional Neural Network (CNN Model - Effecient B5) for extracting features, object detection, enabling accurate identification and similarity calculations between lost and found paws. 
+*CNN Model* - We employed a Convolutional Neural Network (CNN Model - Effecient B5) for extracting features, object detection, enabling accurate identification and similarity calculations between lost and found paws. 
 
-AWS S3 - AWS S3 was utilised for database management and secure cloud storage of images.
+*AWS S3* - AWS S3 was utilised for database management and secure cloud storage of images.
 
-Jinja language -The Jinja templating engine helps us dynamically display database-driven content on the website.
+*Jinja language* -The Jinja templating engine helps us dynamically display database-driven content on the website.
 
-Railway - helps us deploy the demo websites.
+*Railway* - helps us deploy the demo websites.
 
-Python (Flask, Flask Mail, numpy, os, mysql.connector, Boto3, dotenv)
+*Python* (Flask, Flask Mail, numpy, os, mysql.connector, Boto3, dotenv)
 The application’s backend was powered by Python using Flask. Flask provided the web framework for routing and handling requests. I incorporated several libraries, such as:
 - Flask Mail for sending emails within the application.
 - Numpy for handling mathematical operations and data processing.

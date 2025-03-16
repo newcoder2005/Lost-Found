@@ -258,3 +258,22 @@ a {
     position: static; /* Allow normal flex positioning */
     gap: 10px;
 }
+
+
+.content_results {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px; /* Adds spacing between divs */
+}
+
+.title_results {
+    display: block; /* Ensures it doesn't force inline */
+    width: 100%;
+}
+
+.title_results p {
+    margin-bottom: 15px; /* Adds spacing without <br> */
+}

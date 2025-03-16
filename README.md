@@ -18,7 +18,8 @@
 - CNN Models (Tensorflow)
 - Jinja
 
-## About our product - [Try Now](pawpals.up.railway.app)
+## About our product
+<img width="953" alt="image" src="https://github.com/user-attachments/assets/73a9202b-e8d3-4411-b5c9-e44f4e8114dc" />
 
 Inspiration
 Being part of a community of devoted animal lovers, we deeply understand the heartbreak of losing a beloved pet. We’ve witnessed firsthand the pain, anxiety, and helplessness that come with searching for a missing furry friend. While miracles don’t always happen, we believe in creating solutions that can bring pet owners and their lost companions one step closer to reunion. This passion is what drives us to develop PawPals.
@@ -30,8 +31,12 @@ With this website, we hope to give more pets a fighting chance to be rescued and
 ## How to use Pawpals website
 ### Finding a paw
 1. Click on the *missing paw*, this link will direct you to the form.
+<img width="290" alt="image" src="https://github.com/user-attachments/assets/f0c7681c-7ad1-4275-971a-b4bb1076145f" />
+
 2. Fill in the information about the paw includes the *image of the paw*, and submit it.
-3. Wait for seconds, some watches will show you. Otherwise, it display a message to announce you wait.
+<img width="847" alt="image" src="https://github.com/user-attachments/assets/b8cbfac9-0aee-4b32-b0e6-cd60f4107eb6" />
+
+4. Wait for seconds, some watches will show you. Otherwise, it display a message to announce you wait.
    
 ### Found a paw
 1. Click on the *paw found*, this link will direct you to the form.
@@ -40,6 +45,8 @@ With this website, we hope to give more pets a fighting chance to be rescued and
 
 ### Checking Updates
 1. Click on the *Updates*, and fill your email.
+<img width="378" alt="image" src="https://github.com/user-attachments/assets/062c0608-c8cd-45ef-be7b-5fc1b9131e6e" />
+
 2. Some updates will show you.
    
 ## Challenges

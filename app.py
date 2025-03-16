@@ -143,7 +143,7 @@ def form_missing():
     breed = request.form.get("breed")
     description = request.form.get("description")
     fileCat = request.files.get("fileCat")
-
+    print(fileCat)
     filepath = upload(fileCat)
     
     query = "INSERT INTO pets(email, name, lost, description, location, image_path, breed) VALUES (%s,%s,%s,%s,%s,%s,%s);"
